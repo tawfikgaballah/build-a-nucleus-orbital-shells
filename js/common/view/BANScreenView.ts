@@ -121,7 +121,6 @@ abstract class BANScreenView<M extends BANModel<ParticleAtom | ShellModelNucleus
 
     this.resetAllButton = new ResetAllButton( {
       listener: () => {
-        this.interruptSubtreeInput(); // Cancel interactions that may be in progress.
         this.model.reset();
         this.reset();
 
