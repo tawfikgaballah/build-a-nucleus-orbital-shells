@@ -31,7 +31,12 @@ import ChartIntroModel from '../model/ChartIntroModel.js';
 import NuclideChartCellModel from '../model/NuclideChartCellModel.js';
 import { N_ONE_CAPACITY, N_ZERO_CAPACITY } from '../model/ShellModelNucleus.js';
 import NuclideChartCell from './NuclideChartCell.js';
-
+import {
+  N_ZERO_CAPACITY,
+  N_ONE_CAPACITY,
+  N_TWO_CAPACITY,
+  N_THREE_CAPACITY
+} from '../model/ShellModelNucleus.js';
 type SelfOptions = {
   cellTextFontSize: number;
   arrowSymbol: boolean;
@@ -41,7 +46,7 @@ type SelfOptions = {
 export type NuclideChartNodeOptions = SelfOptions & NodeOptions;
 
 // Applies to both proton and neutron numbers see showMagicNumbersProperty for details.
-const MAGIC_NUMBERS = [ N_ZERO_CAPACITY, N_ZERO_CAPACITY + N_ONE_CAPACITY ];
+const MAGIC_NUMBERS = [ N_ZERO_CAPACITY, N_ZERO_CAPACITY + N_ONE_CAPACITY, N_ZERO_CAPACITY + N_ONE_CAPACITY + N_TWO_CAPACITY ];
 
 class NuclideChartNode extends Node {
 
@@ -186,9 +191,9 @@ class NuclideChartNode extends Node {
     // Create and add the chart cells to the chart. row is proton number and column is neutron number.
     chartTransform.forEachSpacing( Orientation.VERTICAL, 1, 0, 'strict',
       ( protonNumber, viewPosition ) => {
-        const populatedCellsInRow = BANModel.POPULATED_CELLS[ protonNumber ];
-        const rowCells: NuclideChartCell[] = [];
-        populatedCellsInRow.forEach( ( neutronNumber, columnIndex ) => {
+          const populatedCellsInRow = BANModel.POPULATED_CELLS[ protonNumber ] || [];
+          const rowCells: NuclideChartCell[] = [];
+          populatedCellsInRow.forEach( ( neutronNumber, columnIndex ) => {
 
           // Create and add the NuclideChartCell.
           const defaultLineWidth = chartTransform.modelToViewDeltaX( BANConstants.NUCLIDE_CHART_CELL_LINE_WIDTH );

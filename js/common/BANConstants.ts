@@ -15,7 +15,7 @@ import buildANucleus from '../buildANucleus.js';
 import BANColors from './BANColors.js';
 
 // constants
-const PARTICLE_RADIUS = ShredConstants.NUCLEON_RADIUS;
+const PARTICLE_RADIUS =ShredConstants.NUCLEON_RADIUS;
 const PARTICLE_DIAMETER = PARTICLE_RADIUS * 2;
 
 const PANEL_CORNER_RADIUS = 6;
@@ -51,8 +51,8 @@ const BANConstants = {
   // The maximum number of protons and neutrons for each screen.
   DECAY_MAX_NUMBER_OF_PROTONS: 94,
   DECAY_MAX_NUMBER_OF_NEUTRONS: 146,
-  CHART_MAX_NUMBER_OF_PROTONS: 10,
-  CHART_MAX_NUMBER_OF_NEUTRONS: 12,
+  CHART_MAX_NUMBER_OF_PROTONS: 13,
+  CHART_MAX_NUMBER_OF_NEUTRONS: 33,
 
   // The side length of the number of cells the zoom-in chart node and focused chart node should highlight.
   ZOOM_IN_CHART_SQUARE_LENGTH: 5,

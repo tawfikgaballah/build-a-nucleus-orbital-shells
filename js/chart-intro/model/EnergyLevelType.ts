@@ -13,43 +13,70 @@ import Enumeration from '../../../../phet-core/js/Enumeration.js';
 import EnumerationValue from '../../../../phet-core/js/EnumerationValue.js';
 import buildANucleus from '../../buildANucleus.js';
 
+
+
+// EnergyLevelType.ts
+
 class EnergyLevelType extends EnumerationValue {
 
-  public static readonly N_ZERO = new EnergyLevelType( 0, 0, 2 );
-
-  public static readonly N_ONE = new EnergyLevelType( 0, 1, 6 );
-
-  // Though n2 has an actual capacity of 12, we are "hollywooding" for this screen, and don't need the extra space.
-  public static readonly N_TWO = new EnergyLevelType( 0, 2, 6 );
-
-  public static readonly enumeration = new Enumeration( EnergyLevelType );
-
-  public constructor( public readonly xPosition: number, public readonly yPosition: number,
-                      public readonly capacity: number ) {
+  // n, l, j encoded for labeling/physics (optional but useful)
+  public constructor(
+    public readonly n: number,
+    public readonly l: number,
+    public readonly j2: number,          // store 2j as int to avoid floats (e.g., j=3/2 => j2=3)
+    public readonly yPosition: number,   // vertical row in the diagram
+    public readonly label: string        // e.g., '1p3/2'
+  ) {
     super();
   }
 
-  public static readonly ENERGY_LEVELS =
-    [ EnergyLevelType.N_ZERO, EnergyLevelType.N_ONE, EnergyLevelType.N_TWO ] as const;
+  public get capacity(): number {
+    // 2j+1 where j = j2/2  =>  (j2 + 2)/2, but integer arithmetic is easier as:
+    return this.j2 + 1; // because j2 = 2j
+  }
 
-  /**
-   * Given a particle index (0-based), return the EnergyLevelType that it will be placed on. See ShellModelNucleus.
-   */
-  public static getForIndex( index: number ): EnergyLevelType {
-    let indexRemainder = index;
-    for ( let i = 0; i < EnergyLevelType.ENERGY_LEVELS.length; i++ ) {
-      const energyLevel = EnergyLevelType.ENERGY_LEVELS[ i ];
-      indexRemainder -= energyLevel.capacity;
-      if ( indexRemainder < 0 ) {
-        return energyLevel;
+  // Example ordering: up to pf (edit as you like)
+  public static readonly _1s1_2 = new EnergyLevelType( 1, 0, 1, 0, '1s_{1/2}' ); // cap 2
+  public static readonly _1p3_2 = new EnergyLevelType( 1, 1, 3, 1, '1p_{3/2}' ); // cap 4
+  public static readonly _1p1_2 = new EnergyLevelType( 1, 1, 1, 2, '1p_{1/2}' ); // cap 2
+  public static readonly _1d5_2 = new EnergyLevelType( 1, 2, 5, 3, '1d_{5/2}' ); // cap 6
+  public static readonly _2s1_2 = new EnergyLevelType( 2, 0, 1, 4, '2s_{1/2}' ); // cap 2
+  public static readonly _1d3_2 = new EnergyLevelType( 1, 2, 3, 5, '1d_{3/2}' ); // cap 4
+  public static readonly _1f7_2 = new EnergyLevelType( 1, 3, 7, 6, '1f_{7/2}' ); // cap 8
+  public static readonly _2p3_2 = new EnergyLevelType( 2, 1, 3, 7, '2p_{3/2}' ); // cap 4
+  public static readonly _1f5_2 = new EnergyLevelType( 1, 3, 5, 8, '1f_{5/2}' ); // cap 6
+  public static readonly _2p1_2 = new EnergyLevelType( 2, 1, 1, 9, '2p_{1/2}' ); // cap 2
+  // add more if you want (g9/2, etc.)
+
+  public static readonly enumeration = new Enumeration( EnergyLevelType );
+
+  public static readonly ENERGY_LEVELS = [
+    EnergyLevelType._1s1_2,
+    EnergyLevelType._1p3_2,
+    EnergyLevelType._1p1_2,
+    EnergyLevelType._1d5_2,
+    EnergyLevelType._2s1_2,
+    EnergyLevelType._1d3_2,
+    EnergyLevelType._1f7_2,
+    EnergyLevelType._2p3_2,
+    EnergyLevelType._1f5_2,
+    EnergyLevelType._2p1_2
+  ] as const;
+
+  public static getForIndex( index0Based: number ): EnergyLevelType {
+    let r = index0Based;
+    for ( const level of EnergyLevelType.ENERGY_LEVELS ) {
+      r -= level.capacity;
+
+      if ( r < 0 ) {
+        return level;
       }
     }
-
-    assert && assert( false,
-      `should have returned an EnergyLevel above while iterating, index out of supported range: ${index}` );
+    assert && assert( false, `index out of supported range: ${index0Based}` );
     return EnergyLevelType.ENERGY_LEVELS[ EnergyLevelType.ENERGY_LEVELS.length - 1 ];
   }
 }
+
 
 buildANucleus.register( 'EnergyLevelType', EnergyLevelType );
 export default EnergyLevelType;

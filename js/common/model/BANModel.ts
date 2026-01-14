@@ -289,19 +289,25 @@ class BANModel<T extends ParticleAtom> {
   // 2D array that defines the table structure.
   // The rows are the proton number, for example the first row is protonNumber = 0. The numbers in the rows are the
   // neutron number.
-  public static readonly POPULATED_CELLS = [
-    [ 1, 4, 6 ],
-    [ 0, 1, 2, 3, 4, 5, 6 ],
-    [ 1, 2, 3, 4, 5, 6, 7, 8 ],
-    [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-    [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
-    [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
-    [ 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
-    [ 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
-    [ 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
-    [ 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
-    [ 5, 6, 7, 8, 9, 10, 11, 12 ]
-  ];
+// At top if needed
+
+
+// ...
+
+public static get POPULATED_CELLS(): number[][] {
+  const rows: number[][] = [];
+
+  for ( let z = BANConstants.CHART_MIN; z <= BANConstants.CHART_MAX_NUMBER_OF_PROTONS; z++ ) {
+    const row: number[] = [];
+    for ( let n = BANConstants.CHART_MIN; n <= BANConstants.CHART_MAX_NUMBER_OF_NEUTRONS; n++ ) {
+      row.push( n );
+    }
+    rows[ z ] = row;
+  }
+
+  return rows;
+}
+
 }
 
 buildANucleus.register( 'BANModel', BANModel );

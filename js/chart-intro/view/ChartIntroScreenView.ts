@@ -71,7 +71,7 @@ class ChartIntroScreenView extends BANScreenView<ChartIntroModel> {
       optionize<NuclideChartIntroScreenViewOptions, EmptySelfOptions, BANScreenViewOptions>()( {
 
         // Position of the particle nucleus (top left corner-ish).
-        particleViewPosition: new Vector2( 135, 245 )
+        particleViewPosition: new Vector2( 50, 200 )
       }, providedOptions );
 
     super( model, new Vector2( BANConstants.SCREEN_VIEW_ATOM_CENTER_X, 87 ), options ); // Center of the mini-atom.
@@ -132,8 +132,8 @@ class ChartIntroScreenView extends BANScreenView<ChartIntroModel> {
 
     // Create and add the periodic table and symbol.
     const periodicTableAndIsotopeSymbol = new PeriodicTableAndIsotopeSymbol( model.particleAtom );
-    periodicTableAndIsotopeSymbol.top = this.nucleonNumberPanel.top;
-    periodicTableAndIsotopeSymbol.right = this.resetAllButton.right;
+    periodicTableAndIsotopeSymbol.top = this.nucleonNumberPanel.top+10;
+    periodicTableAndIsotopeSymbol.right = this.resetAllButton.right-90;
     this.addChild( periodicTableAndIsotopeSymbol );
 
     // Positioning.
@@ -157,7 +157,7 @@ class ChartIntroScreenView extends BANScreenView<ChartIntroModel> {
     } );
     energyText.rotate( -Math.PI / 2 );
     energyText.boundsProperty.link( () => {
-      energyText.left = this.nucleonNumberPanel.left;
+      energyText.left = this.nucleonNumberPanel.left-50;
       energyText.centerY = this.layoutBounds.centerY + 20;
     } );
     this.addChild( energyText );
@@ -174,15 +174,21 @@ class ChartIntroScreenView extends BANScreenView<ChartIntroModel> {
       model.particleAtom.protonCountProperty, this.model.particleAtom.modelViewTransform );
 
     // We don't want to effect the origin of this, so just translate.
-    this.protonEnergyLevelNode.setTranslation( options.particleViewPosition );
+    this.protonEnergyLevelNode.left = options.particleViewPosition.x;
+    this.protonEnergyLevelNode.top = options.particleViewPosition.y;
+
+
     this.addChild( this.protonEnergyLevelNode );
 
     this.neutronEnergyLevelNode = new NucleonShellView( ParticleTypeEnum.NEUTRON, model.particleAtom.neutronShellPositions,
       model.particleAtom.neutronCountProperty, this.model.particleAtom.modelViewTransform );
 
     // Neutron energy levels are further to the right than the proton energy levels.
-    this.neutronEnergyLevelNode.setTranslation(
-      options.particleViewPosition.plusXY( BANConstants.X_DISTANCE_BETWEEN_ENERGY_LEVELS, 0 ) );
+    this.neutronEnergyLevelNode.left =
+      options.particleViewPosition.x + BANConstants.X_DISTANCE_BETWEEN_ENERGY_LEVELS;
+    this.neutronEnergyLevelNode.top = options.particleViewPosition.y;
+
+
     this.addChild( this.neutronEnergyLevelNode );
 
     // Dashed 'zoom' lines options and positioning.
@@ -234,8 +240,8 @@ class ChartIntroScreenView extends BANScreenView<ChartIntroModel> {
         { value: 'partial', createNode: () => new CompleteNuclideChartIconNode() },
         { value: 'zoom', createNode: () => new ZoomInNuclideChartIconNode() }
       ], {
-        left: this.nuclideChartAccordionBox.left,
-        top: this.nuclideChartAccordionBox.bottom + CHART_VERTICAL_MARGINS,
+        left: periodicTableAndIsotopeSymbol.right + CHART_VERTICAL_MARGINS,
+        bottom: periodicTableAndIsotopeSymbol.bottom ,
         orientation: 'horizontal',
         radioButtonOptions: { baseColor: BANColors.chartRadioButtonsBackgroundColorProperty }
       } );
@@ -247,14 +253,14 @@ class ChartIntroScreenView extends BANScreenView<ChartIntroModel> {
         boxWidth: 15,
         touchAreaYDilation: 4
       } );
-    showMagicNumbersCheckbox.left = partialChartRadioButtonGroup.right + CHART_VERTICAL_MARGINS;
-    showMagicNumbersCheckbox.top = this.nuclideChartAccordionBox.bottom + CHART_VERTICAL_MARGINS;
+    showMagicNumbersCheckbox.left = periodicTableAndIsotopeSymbol.right + CHART_VERTICAL_MARGINS;
+    showMagicNumbersCheckbox.top = this.nuclideChartAccordionBox.top + 5;
     this.addChild( showMagicNumbersCheckbox );
 
     // Create and add the fullChartDialog and 'Full Chart' button.
     const fullChartTextButton = new FullChartTextButton( {
-      left: showMagicNumbersCheckbox.left,
-      bottom: partialChartRadioButtonGroup.bottom
+      left: periodicTableAndIsotopeSymbol.right + CHART_VERTICAL_MARGINS,
+      top: showMagicNumbersCheckbox.bottom + CHART_VERTICAL_MARGINS
     } );
     this.addChild( fullChartTextButton );
 
